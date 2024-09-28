@@ -1,12 +1,12 @@
 def main():
     """Displays a menu and handles user choices for score input and related actions."""
-    score = -1
+    score = get_valid_score("Enter Score: ")
     display_menu()
     choice = get_choice()
 
     while choice != "Q":
         if choice == "G":
-            score = get_valid_score()
+            score = get_valid_score("Enter Score:")
         elif choice == "P":
             print_result(score)
         elif choice == "S":
@@ -27,9 +27,9 @@ def get_choice():
     return input(">>> ").upper()
 
 
-def get_valid_score():
+def get_valid_score(prompt):
     """valid score between 0 and 100."""
-    score = int(input("Enter score: "))
+    score = int(input(prompt))
     while score < 0 or score > 100:
         print("Invalid score. Please enter a valid score (0-100).")
         score = int(input("Enter score: "))
