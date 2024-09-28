@@ -1,12 +1,10 @@
-""" """
-
 def main():
-    score = 0
+    """Displays a menu and handles user choices for score input and related actions."""
+    score = -1
     display_menu()
     choice = get_choice()
 
     while choice != "Q":
-
         if choice == "G":
             score = get_valid_score()
         elif choice == "P":
@@ -17,7 +15,6 @@ def main():
             print("Invalid choice.")
         choice = get_choice()
     print("Finished.")
-
 
 def display_menu():
     """Display the menu options."""
@@ -40,16 +37,20 @@ def get_valid_score():
 
 
 def print_result(score):
-    """Print the score"""
-    if score == 0:
+    """Evaluates the score and prints a message based on its value."""
+    if score < 0 or score > 100:
         print("Get a score first!")
+    elif score >= 90:
+        print("Excellent")
+    elif score >= 50:
+        print("Passable")
     else:
-        print(f"Score: {score}")
+        print("Bad")
 
 
 def show_stars(score):
     """Print stars corresponding to the score"""
-    if score == 0:
+    if score == -1:
         print("Get a score first!")
     else:
         print('*' * score)
