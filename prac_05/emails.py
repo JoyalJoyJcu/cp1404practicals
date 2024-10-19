@@ -1,4 +1,6 @@
 def main():
+    """Main function to collect email addresses and associated names"""
+
     email = input("Email:")
     name_to_email = {}
     while email != '':
@@ -18,6 +20,8 @@ def main():
         print(f"{name} ({email})")
 
 def extract_name(email):
+    """Extracts a name from an email address."""
+
     name_part = email.split('@')[0]
     name = name_part.replace('.', '')
     return name
