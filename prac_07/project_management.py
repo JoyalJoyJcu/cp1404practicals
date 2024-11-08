@@ -2,15 +2,19 @@ from project import Project
 import datetime
 from operator import attrgetter
 
+FILENAME = 'projects.txt'  # for convenience (not code)
+
 
 def main():
-    filename = 'projects.txt'
+    """ Runs the project management menu, allowing users to load, save, display, filter,
+    add, and update projects until they choose to quit. Prompts for saving before exit. """
     projects = []
     display_menu()
-    choice = get_choice()
+    choice = get_valid_choice()
     while choice != "Q":
         if choice == "L":
-            projects = load_projects()
+            # filename = valid_name("filename to load: ") # what it should have
+            projects = load_projects(FILENAME)  # for test purposes, would be above code for code
         elif choice == "S":
             save_projects(projects)
         elif choice == "D":
@@ -22,8 +26,8 @@ def main():
         elif choice == "U":
             update_project(projects)
         display_menu()
-        choice = get_choice()
-    user_input = input(f"Would you like to save to {filename}?")
+        choice = get_valid_choice()
+    user_input = input(f"Would you like to save to {FILENAME}?")  # would use filename from load
     if user_input == 'yes':
         save_projects(projects)
     print("Thank you for using custom-built project management software.")
@@ -36,20 +40,23 @@ def display_menu():
     print(menu)
 
 
-def get_choice():
-    """user's choice."""
-    return input(">>> ").upper()
+def get_valid_choice():
+    """ Prompts for a valid menu choice"""
+    user_choice = input(">>> ").upper()
+    while user_choice != 'L,S,D,F,A,U,Q':
+        print("Invalid choice. Please try again.")
+        user_choice = input(">>> ").upper()
+    return user_choice
 
 
-def load_projects():
+def load_projects(filename):
+    """Loads project data from a file, skipping the header, and adds each project to a list."""
     projects = []
-    # filename = input("filename to load: ") # actual code
-    filename = 'projects.txt'  # for test purposes
     in_file = open(filename, 'r')
     in_file.readline()  # remove the header
     for line in in_file:
         parts = line.strip().split('\t')  # split by tabs in the code
-        date = datetime.datetime.strptime(parts[1], "%d/%m/%Y")
+        date = datetime.datetime.strptime(parts[1], "%d/%m/%Y")  # formate it right
         project = Project(parts[0], date, int(parts[2]), float(parts[3]), int(parts[4]))
         projects.append(project)
     in_file.close()
@@ -59,6 +66,7 @@ def load_projects():
 
 
 def save_projects(projects):
+    """Saves project data to a specified file, including a header row."""
     filename = input("Filename to save to: ")
     with open(filename, 'w') as out_file:
         out_file.write("Name\tStart Date\tPriority\tEstimate\tCompletion Percentage\n")  # adding header
@@ -69,6 +77,7 @@ def save_projects(projects):
 
 
 def display_projects(projects):
+    """Displays incomplete and completed projects separately, sorted within each group."""
     incomplete_projects = [project for project in projects if project.completion_percentage < 100]
     completed_projects = [project for project in projects if project.completion_percentage == 100]
 
@@ -87,16 +96,19 @@ def display_projects(projects):
 
 
 def filter_project(projects):
+    """Filters and displays projects starting after a specified date, sorted by start date."""
     date = get_valid_date("Show projects that start after date (dd/mm/yy):")
     print(f"That day is/was {date.strftime('%A')}")
-    print(date.strftime("%d/%m/%Y"))
+    print(date.strftime("%d/%m/%Y"))  # formats the code
     filtered_projects = [project for project in projects if project.start_date > date]
-    filtered_projects.sort(key=attrgetter("start_date"))
+    filtered_projects.sort(key=attrgetter("start_date"))  # sort by date
     for project in filtered_projects:
         print(project)
 
 
 def add_project(projects):
+    """Adds a new project to the list by prompting for details like name,
+    start date, priority, cost estimate, and completion percentage."""
     print("Let's add a new project")
     name = valid_name()
     date = get_valid_date("Start date (dd/mm/yy): ")
@@ -109,6 +121,8 @@ def add_project(projects):
 
 
 def update_project(projects):
+    """Allows the user to update the completion percentage and
+    priority of an existing project."""
     for i, project in enumerate(projects):
         print(f"{i} {project}")
 
@@ -125,6 +139,8 @@ def update_project(projects):
 
 
 def valid_name():
+    """Prompts the user to enter a non-empty name.
+    Repeats until a valid name is provided."""
     name = input("Name: ")
     while name == '':
         print("Can't be empty!")
@@ -133,6 +149,8 @@ def valid_name():
 
 
 def valid_project_choice(projects):
+    """Prompts the user to select a valid project by index,
+    ensuring the input is within the valid range."""
     project_choice = int(input("Project choice:"))
     while 0 > project_choice > len(projects) - 1:  # Check if number is out of valid range
         print("Invalid place number.")
