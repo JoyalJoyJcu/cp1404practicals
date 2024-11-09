@@ -131,10 +131,10 @@ def update_project(projects):
     project = projects[project_choice]
     print(f"{project}")
 
-    new_percentage = get_valid_number("New Percentage:")
+    new_percentage = updated_choice("New Percentage:")
     if new_percentage != '':
         project.completion_percentage = new_percentage
-    new_priority = get_valid_number("New Priority:")
+    new_priority = updated_choice("New Priority:")
     if new_priority != '':
         project.priority = new_priority
 
@@ -152,34 +152,63 @@ def valid_name():
 def valid_project_choice(projects):
     """Prompts the user to select a valid project by index,
     ensuring the input is within the valid range."""
-    project_choice = int(input("Project choice:"))
-    while 0 > project_choice > len(projects) - 1:  # Check if number is out of valid range
-        print("Invalid place number.")
-        project_choice = int(input("Project choice:"))  # Get a valid number from the user
-    return project_choice
+    project_choice = input("Project choice:")
+    while isinstance(project_choice, str):
+        try:
+            project_choice = int(project_choice)
+            if 0 < project_choice < len(projects) - 1:  # Check if number is out of valid range
+                return project_choice
+            else:
+                print("Invalid choice. Please try again.")
+                project_choice = input("Project choice:")
+        except ValueError:
+            print("Invalid choice. Please try again.")
+            project_choice = int(input("Project choice:"))  # Get a valid number from the user
 
+
+def updated_choice(prompt):
+    number = input(prompt)
+    while isinstance(number, str):
+        try:
+            number = int(number)
+            if number >= 0:
+                return number
+            else:
+                print("Invalid choice. Please try again.")
+                number = input("Project choice:")
+        except ValueError:
+            if number == '':
+                return number
+            else:
+                print("Invaild number")
+                number = input(prompt)
 
 def get_valid_number(prompt):
     """valid score between 0 and 100."""
-    number = int(input(prompt))
-    while number < 0 or number > 100:
-        print("Invalid number")
-        number = int(input(prompt))
-    return number
+    number = input(prompt)
+    while isinstance(number, str):
+        try:
+            number = int(number)
+            if 0 > number or  number < 100:
+                return number
+            else:
+                print("Invalid number,pick a number between 0 and 100")
+                number = input(prompt)
+        except ValueError:
+            print("Invalid number,pick a number between 0 and 100")
+            number = input(prompt)
 
 
 def get_valid_date(prompt):
     """Prompt for a valid date in dd/mm/yy format."""
     date_input = input(prompt)
-    valid = False
-    while not valid:
+    while not isinstance(date_input, datetime.datetime):
         try:
             date = datetime.datetime.strptime(date_input, "%d/%m/%y")
-            valid = True  # If the date is valid, stop the loop
+            return date
         except ValueError:
             print("Invalid date format. Please use dd/mm/yy.")
             date_input = input(prompt)  # Ask the user to input the date again
-    return date
 
 
 main()
