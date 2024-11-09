@@ -42,7 +42,7 @@ def display_menu():
 
 def get_valid_choice():
     """Prompts for a valid menu choice"""
-    valid_choices = ('L', 'S', 'D', 'F', 'A', 'U', 'Q')
+    valid_choices = ['L', 'S', 'D', 'F', 'A', 'U', 'Q']
     user_choice = input(">>> ").upper()
     while user_choice not in valid_choices:
         print("Invalid choice. Please try again.")
