@@ -156,7 +156,7 @@ def valid_project_choice(projects):
     while isinstance(project_choice, str):
         try:
             project_choice = int(project_choice)
-            if 0 < project_choice < len(projects) - 1:  # Check if number is out of valid range
+            if 0 <= project_choice < len(projects) - 1:  # Check if number is out of valid range
                 return project_choice
             else:
                 print("Invalid choice. Please try again.")
@@ -204,7 +204,7 @@ def get_valid_date(prompt):
     date_input = input(prompt)
     while not isinstance(date_input, datetime.datetime):
         try:
-            date = datetime.datetime.strptime(date_input, "%d/%m/%y")
+            date = datetime.datetime.strptime(date_input, "%d/%m/%Y")
             return date
         except ValueError:
             print("Invalid date format. Please use dd/mm/yy.")
